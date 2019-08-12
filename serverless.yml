@@ -1,0 +1,23 @@
+service: toilet-training
+
+provider:
+  name: aws
+  runtime: python3.7
+  iamRoleStatements:
+      - Effect: Allow
+        Action:
+            - dynamodb:*
+            - S3:*
+        Resource: "*"
+
+functions:
+  hello:
+    handler: handler.createGraph
+    events:
+      - s3:
+          bucket: toilet-training
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: graph/
+            - suffix: .jpg
+          existing: true
